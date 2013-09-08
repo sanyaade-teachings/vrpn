@@ -4,7 +4,7 @@
 #endif
 #include <string.h>                     // for strncpy
 
-#if defined(linux) && !defined(VRPN_CLIENT_ONLY)
+#if defined(linux) && !defined(__ANDROID__) && !defined(VRPN_CLIENT_ONLY)
 #include <linux/lp.h>                   // for LPGETSTATUS
 #include <sys/ioctl.h>                  // for ioctl
 #endif
@@ -638,7 +638,7 @@ void vrpn_Button_Python::read(void)
     }
 
     // Read from the status register, read 3 times to debounce noise.
-#ifdef	linux
+#if defined(linux) && !defined(__ANDROID__) 
     for (i = 0; i < debounce_count; i++) 
       if (ioctl(port, LPGETSTATUS, &status_register[i]) == -1) {
 	    perror("vrpn_Button_Python::read(): ioctl() failed");
